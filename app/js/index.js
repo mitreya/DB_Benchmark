@@ -17,10 +17,14 @@ var diagonal = d3.svg.diagonal()
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.right + margin.left)
     .attr("height", height + margin.top + margin.bottom)
+    .style({"overflow" : 'visible'})
     .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-d3.json("data/Q2.1.json", function (error, flare) {
+
+var fn = "data/" + location.hash.replace("#", '') + ".json";
+
+d3.json(fn, function (error, flare) {
     root = createChildrenArray(flare);
     root.x0 = width / 2;
     root.y0 = 0;
@@ -127,14 +131,12 @@ function update(source) {
     nodeText
         .attr("y", function (d) {
             var y_offset = 0;
-            if (d.id > 0) {
+
                 y_offset += d.operation ? 10 : 0;
                 y_offset += d.cost ? 10 : 0;
                 y_offset += d.predicate_string ? 10 : 0;
                 y_offset += d.relation_name ? 10 : 0;
-            } else {
-                y_offset = 10;
-            }
+
             return d.children || d._children ? -y_offset : 10;
         })
         .attr("dy", function (d) {
